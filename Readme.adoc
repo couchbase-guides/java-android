@@ -1,0 +1,38 @@
+---
+tags: [Android, mobile, Couchbase Lite]
+---
+:couchbase_version: Couchbase Mobile 1.2.1
+:toc:
+:project_id:
+:icons: font
+:source-highlighter: prettify
+
+Starter Kit
+
+= Couchbase Lite on Android
+
+This guide walks you through the process of creating an on-device database using link:http://developer.couchbase.com/mobile/[Couchbase Lite].
+
+== What you'll build
+
+You'll build an Android application that creates and manipulates an on-device Couchbase Lite database.
+
+== What you'll need
+
+* 15-30 minutes
+* link:https://developer.android.com/studio/index.html[Android Studio] (version 2 or later)
+* link:http://www.couchbase.com/nosql-databases/downloads#couchbase-mobile[Couchbase Lite for Android] (1.2.1 or later)
+
+== How to complete this guide
+
+== Setup
+
+Android 2.3 Gingerbread (API level 10) and above.
+
+== Code
+
+== Run
+
+== Summary
+
+Congratulations! You've just developed an Android app that uses Couchbase Lite.
