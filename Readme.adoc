@@ -52,8 +52,12 @@ packagingOptions {
 }
 ----
 == Code
+After following the steps above, we're ready to code CRUD operations in Couchbase Lite.  
+
+We don't list the import statements that go along with this code, since Studio will create them automatically.  For reference, the upper level package containing the CBL classes is `com.couchbase.lite`.
 
 === Opening a database
+Opening a database takes just a couple of lines of code.  You first need a database manager object. Note the context required here is _not_ the standard Android context.  Instead, we will need to create an instance of CBL's AndroidContext, initialized from an Android Context. Here's the code.
 [source,java]
 ----
 Manager manager = null;
@@ -65,9 +69,9 @@ try {
 } catch (Exception ex) {
     Log.e(TAG, "Error getting database");
 }
-
 ----
 === Creating a document
+Documents are fed in and out of the database in the form of Java Maps.  This code snippet creates a new document object and commits the first revision.
 [source,java]
 ----
 Document document = database.createDocument();
@@ -76,17 +80,18 @@ String documentId = document.getId();
 
 Map<String, Object> profile = new HashMap<String, Object>();
 
-profile.put("first", "Fred");
-profile.put("last", "Jones");
+profile.put("firstName", "Fred");
+profile.put("lastName", "Jones");
 
 try {
     document.putProperties(profile);
 } catch (CouchbaseLiteException ex) {
     Log.e(TAG, "Error putting ", ex);
 }
-
 ----
+It's important to know here that the call to `document.putProperties()` both populates the document object _and_ writes it to the local CBL storage.
 === Reading a document
+
 [source,java]
 ----
 document = database.getDocument(documentId);
@@ -102,7 +107,7 @@ try {
     Log.e(TAG, "Error putting ", ex);
 }
 ----
-=== Examine the latest revision
+=== Examining the latest revision
 [source,java]
 ----
 document = database.getDocument(documentId);
