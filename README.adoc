@@ -13,7 +13,7 @@ This guide walks you through a series of basic database operations with link:htt
 
 == What you'll build
 
-You'll build an Android application consisting of a single Activity.  Within the Activity, you'll perform Create, Read, Update, and Delete (CRUD) operations in a new database.  The database will be stored on the device only.
+You'll build an Android application consisting of a single Activity.  Within the Activity, you'll perform Create, Read, Update, and Delete (CRUD) operations in a new database.  The database will be stored locally on the device.
 
 == What you'll need
 
@@ -49,12 +49,15 @@ packagingOptions {
     exclude 'META-INF/NOTICE'
 }
 ----
+
 == Code
+
 After following the steps above, we're ready to code CRUD operations in Couchbase Lite.  
 
 We don't list the import statements that go along with this code, since Studio will create them automatically.  For reference, the upper level package containing the CBL classes is `com.couchbase.lite`.
 
 === Opening a database
+
 Opening a database takes just a couple of lines of code.  You first need a database manager object. Note the context required here is _not_ the standard Android context.  Instead, we will need to create an instance of CBL's AndroidContext, initialized from an Android `Context`. Here's the code.
 [source,java]
 ----
@@ -68,24 +71,24 @@ try {
     Log.e(TAG, "Error getting database");
 }
 ----
+
 === Creating a document
 Documents are fed in and out of the database in the form of Java Maps.  This code snippet creates a new document object and commits the first revision.
 [source,java]
 ----
 Document document = database.createDocument();
-
 String documentId = document.getId();
 
-Map<String, Object> profile = new HashMap<String, Object>();
-
-profile.put("firstName", "Fred");
-profile.put("lastName", "Jones");
+Map<String, Object> profile = new HashMap<>();
+profile.put("firstName", "Hod");
+profile.put("lastName", "Greeley");
 
 try {
     document.putProperties(profile);
 } catch (CouchbaseLiteException ex) {
-    Log.e(TAG, "Error putting ", ex);
+    Log.e(TAG, "CBL operation failed");
 }
+
 ----
 It's important to know here that the call to `document.putProperties()` both populates the document object _and_ writes it to the local CBL storage.
 
@@ -94,29 +97,33 @@ It's important to know here that the call to `document.putProperties()` both pop
 [source,java]
 ----
 document = database.getDocument(documentId);
-profile = document.getProperties();
+
+profile = new HashMap<>();
+profile.putAll(document.getProperties());
 ----
+The `getProperties()` method returns an immutable map.  In this example, we copy the contents into a HashMap so we can make changes.  
+
+In other cases, you might want to create a https://en.wikipedia.org/wiki/Plain_Old_Java_Object[POJO].  CBL uses the https://github.com/FasterXML/jackson[Jackson] project for handling JSON, so those libraries are already available in your app.
 
 === Updating a document
+
+Updating a document is nearly identical to creating one.  In the code snippet, we add a `type` to the profile map.  Calling `putProperties` then updates the database.  Again, this causes the document to updated in the local storage.  No other steps are needed.
 [source,java]
 ----
+profile.put("type", "profile");
+
 try {
-    profile.put("username", "fjones");
     document.putProperties(profile);
 } catch (CouchbaseLiteException ex) {
-    Log.e(TAG, "Error putting ", ex);
+    Log.e(TAG, "CBL operation failed");
 }
 ----
-
-=== Examining the latest revision
-[source,java]
-----
-document = database.getDocument(documentId);
-----
+Couchbase has an idea of document "revisions", which you can read about in the main documentation.  If you examine the document after this update, you can see the revision number has increased by one.
 
 === Deleting a document
-[source,java]
-----
+
+Deleting a document is a single, straightforward call.  It's also possible to do things like query the delete status of the document.
+[source,java]----
 try {
     document.delete();
 } catch (CouchbaseLiteException ex) {
@@ -125,6 +132,7 @@ try {
 ----
 
 == Run
+
 At this point, the code is ready to run. We haven't added any code to display contents of documents.  You may wish to add logging statements and examine output on the console, or even step through the application with the debugger to see the results.
 
 == Summary
