@@ -11,28 +11,113 @@ Starter Kit
 
 = Couchbase Lite on Android
 
-This guide walks you through the process of creating an on-device database using link:http://developer.couchbase.com/mobile/[Couchbase Lite].
+This guide walks you through a series of basic database operations with link:http://developer.couchbase.com/mobile/[Couchbase Lite]  on Android.
 
 == What you'll build
 
-You'll build an Android application that creates and manipulates an on-device Couchbase Lite database.
+You'll build an Android application consisting of a single Activity.  Within the Activity, you'll perform Create, Read, Update, and Delete (CRUD) operations in a new database.  The database will be stored on the device only.
 
 == What you'll need
 
-* 15-30 minutes
+* 15 minutes
 * link:https://developer.android.com/studio/index.html[Android Studio] (version 2 or later)
-* link:http://www.couchbase.com/nosql-databases/downloads#couchbase-mobile[Couchbase Lite for Android] (1.2.1 or later)
 
 == How to complete this guide
 
+This guide assumes you know how to create an application with https://developer.android.com/studio/index.html[Android Studio], using at least one https://developer.android.com/reference/android/app/Activity.html[Android Activity]. 
+
+You will need to know how to launch an application, either in an Android Virtual Device, or on an actual device.  See the https://developer.android.com/studio/index.html[Android Studio] documentation for details.
+
+You will need to include the Couchbase Lite external libraries.  In this guide, we will use Gradle to import the libraries automatically.  There is no need to download the package yourself.
+
 == Setup
 
-Android 2.3 Gingerbread (API level 10) and above.
+Create a new project in Android Studio. Be sure to use API level 10 or higher.
 
+Add a dependency for Couchbase Lite to the app Gradle build file.  To do this, open `build.gradle (Module: app)` in Studio. In the dependencies section, add
+[source,]
+----
+compile 'com.couchbase.lite:couchbase-lite-android:1.2.1'
+----
+
+You may also need to add the following snippet to the `android` section. 
+[source,]
+----
+// workaround for "duplicate files during packaging of APK" issue
+// see https://groups.google.com/d/msg/adt-dev/bl5Rc4Szpzg/wC8cylTWuIEJ
+packagingOptions {
+    exclude 'META-INF/ASL2.0'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE'
+}
+----
 == Code
 
-== Run
+=== Opening a database
+[source,java]
+----
+Manager manager = null;
+Database database = null;
 
+try {
+    manager = new Manager(new AndroidContext(this), Manager.DEFAULT_OPTIONS);
+    database = manager.getDatabase("crud");
+} catch (Exception ex) {
+    Log.e(TAG, "Error getting database");
+}
+
+----
+=== Creating a document
+[source,java]
+----
+Document document = database.createDocument();
+
+String documentId = document.getId();
+
+Map<String, Object> profile = new HashMap<String, Object>();
+
+profile.put("first", "Fred");
+profile.put("last", "Jones");
+
+try {
+    document.putProperties(profile);
+} catch (CouchbaseLiteException ex) {
+    Log.e(TAG, "Error putting ", ex);
+}
+
+----
+=== Reading a document
+[source,java]
+----
+document = database.getDocument(documentId);
+profile = document.getProperties();
+----
+=== Updating a document
+[source,java]
+----
+try {
+    profile.put("username", "fjones");
+    document.putProperties(profile);
+} catch (CouchbaseLiteException ex) {
+    Log.e(TAG, "Error putting ", ex);
+}
+----
+=== Examine the latest revision
+[source,java]
+----
+document = database.getDocument(documentId);
+----
+=== Deleting a document
+[source,java]
+----
+try {
+    document.delete();
+} catch (CouchbaseLiteException ex) {
+    Log.e(TAG, "Error deleting document");
+}
+----
+== Run
+At this point, the code is ready to run. We haven't added any code to display contents of documents.  You may wish to add logging statements and examine output on the console, or even step through the application with the debugger to see the results.
 == Summary
 
 Congratulations! You've just developed an Android app that uses Couchbase Lite.
