@@ -123,7 +123,8 @@ Couchbase has an idea of document "revisions", which you can read about in the m
 === Deleting a document
 
 Deleting a document is a single, straightforward call.  It's also possible to do things like query the delete status of the document.
-[source,java]----
+[source,java]
+----
 try {
     document.delete();
 } catch (CouchbaseLiteException ex) {
