@@ -122,7 +122,7 @@ Couchbase has an idea of document "revisions", which you can read about in the m
 
 === Deleting a document
 
-Deleting a document is a single, straightforward call.  It's also possible to do things like query the delete status of the document.
+Deleting a document is a single, straightforward call.
 [source,java]
 ----
 try {
@@ -131,6 +131,7 @@ try {
     Log.e(TAG, "Error deleting document");
 }
 ----
+It's also possible to do things like query the delete status of the document.
 
 == Run
 
