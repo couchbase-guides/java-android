@@ -30,9 +30,9 @@ You will need to include the Couchbase Lite external libraries.  In this guide, 
 
 == Setup
 
-Create a new project in Android Studio. Be sure to use API level 10 or higher.
+Create a new project in Android Studio.  Be sure to use API level 10 or higher.
 
-Add a dependency for Couchbase Lite to the app Gradle build file.  To do this, open `build.gradle (Module: app)` in Studio. In the dependencies section, add
+Add a dependency for Couchbase Lite to the app Gradle build file.  To do this, open `build.gradle (Module: app)` in Studio.  In the dependencies section, add
 [source,]
 ----
 compile 'com.couchbase.lite:couchbase-lite-android:1.2.1'
@@ -58,7 +58,7 @@ We don't list the import statements that go along with this code, since Studio w
 
 === Opening a database
 
-Opening a database takes just a couple of lines of code.  You first need a database manager object. Note the context required here is _not_ the standard Android context.  Instead, we will need to create an instance of CBL's AndroidContext, initialized from an Android `Context`. Here's the code.
+Opening a database takes just a couple of lines of code.  You first need a database manager object.  Note the context required here is _not_ the standard Android context.  Instead, we will need to create an instance of CBL's AndroidContext, initialized from an Android `Context`.  Here's the code.
 [source,java]
 ----
 Manager manager = null;
@@ -133,7 +133,7 @@ try {
 
 == Run
 
-At this point, the code is ready to run. We haven't added any code to display contents of documents.  You may wish to add logging statements and examine output on the console, or even step through the application with the debugger to see the results.
+At this point, the code is ready to run.  We haven't added any code to display contents of documents.  You may wish to add logging statements and examine output on the console, or even step through the application with the debugger to see the results.
 
 == Summary
 
